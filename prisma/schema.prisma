@@ -1,0 +1,57 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mongodb"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        String @id @default(auto()) @map("_id") @db.ObjectId   
+  email     String   @unique
+  password  String
+  name      String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  walkings  WalkingService[]
+  daycares  DaycareService[]
+}
+
+model WalkingService {
+  id          String @id @default(auto()) @map("_id") @db.ObjectId  
+  userId      String 
+  fecha       DateTime
+  duration    Int
+  location    String
+  price       Float
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  author    User?    @relation(fields: [authorId], references: [id])
+  authorId  String?  @db.ObjectId    
+}
+
+model DaycareService {
+  id          String @id @default(auto()) @map("_id") @db.ObjectId   
+  userId      String
+  fecha        DateTime
+  duration    Int
+  price       Float
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  author    User?    @relation(fields: [authorId], references: [id])
+  authorId  String?  @db.ObjectId    
+}
+
+model PetCareService {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  userId    String
+  fecha      DateTime
+  duration  Int
+  location  String
+  price     Float
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt  
+}
+
+
